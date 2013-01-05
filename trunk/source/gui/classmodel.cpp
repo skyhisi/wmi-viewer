@@ -67,7 +67,7 @@ bool ClassModel::load(QString* error)
 	QStringList propNames = _classObject.propertyNames(WmiClassObject::NameSourceNonSystem);
 	foreach(QString propName, propNames)
 	{
-		qDebug() << propName;
+		//qDebug() << propName;
 		WmiQualifierSet propQS = _classObject.propertyQualifierSet(propName);
 		Q_ASSERT(propQS.valid());
 		
@@ -75,7 +75,7 @@ bool ClassModel::load(QString* error)
 		info.name = propName;
 		
 		const QStringList avaliablePropValueNames = propQS.qualifierNames();
-		qDebug() << avaliablePropValueNames;
+		//qDebug() << avaliablePropValueNames;
 		
 		foreach(QString propValueName, avaliablePropValueNames)
 		{

@@ -80,12 +80,23 @@ ClassBrowser::ClassBrowser(const WmiLocator& l, QWidget* p) :
 	mainLayout->addWidget(splitter);
 	
 	
-	connect(namespaceLoadButton, SIGNAL(clicked()), this, SLOT(loadClasses()));
-	connect(_listModel, SIGNAL(modelReset()), this, SLOT(loadMoreClasses()));
-	connect(_listModel, SIGNAL(rowsInserted(const QModelIndex&,int,int)), this, SLOT(loadMoreClasses()));
-	connect(_listModel, SIGNAL(modelReset()), _classModel, SLOT(clear()));
+	connect(
+		namespaceLoadButton, SIGNAL(clicked()),
+		this, SLOT(loadClasses()));
 	
-	connect(_classFilterLineEdit, SIGNAL(textChanged(const QString&)), _listFilterModel, SLOT(setFilterWildcard(const QString&)));
+	connect(
+		_listModel, SIGNAL(modelReset()),
+		this, SLOT(loadMoreClasses()));
+	connect(
+		_listModel, SIGNAL(modelReset()),
+		_classModel, SLOT(clear()));
+	connect(
+		_listModel, SIGNAL(rowsInserted(const QModelIndex&,int,int)),
+		this, SLOT(loadMoreClasses()));
+	
+	connect(
+		_classFilterLineEdit, SIGNAL(textChanged(const QString&)),
+		_listFilterModel, SLOT(setFilterWildcard(const QString&)));
 	
 	connect(
 		_classListView->selectionModel(),
@@ -159,7 +170,7 @@ void ClassBrowser::buildQuery()
 	{
 		params << idx.data().toString();
 	}
-	QString paramStr = params.isEmpty() ? QString("*") : params.join(", ");
+	const QString paramStr = params.isEmpty() ? QString("*") : params.join(", ");
 
 	const QString q = QString("SELECT %1 FROM %2").arg(
 		paramStr, _classModel->className());
