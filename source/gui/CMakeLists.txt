@@ -9,7 +9,11 @@ qt4_wrap_cpp(MOC_FILES
 	wqlhighlighter.hpp
 )
 
-add_executable(wmiviewer
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+	set(EXETYPE WIN32)
+endif()
+
+add_executable(wmiviewer ${EXETYPE}
 	classbrowser.hpp
 	classbrowser.cpp
 	classmodel.hpp
@@ -32,6 +36,7 @@ target_link_libraries(wmiviewer
 	${WBEMUUID_LIBRARY}
 )
 
+# Copy DLL into build dir to allow running from command line without setting PATH
 add_custom_command(TARGET wmiviewer POST_BUILD
 	COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qtwmiwrapper>" "${CMAKE_CURRENT_BINARY_DIR}"
 )
