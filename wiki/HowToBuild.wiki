@@ -1,4 +1,5 @@
 #summary How to build
+#labels Featured
 
 = Development Environment =
 To build you will need the following installed:
@@ -28,4 +29,3 @@ You may want to add your CMake `bin` directory (`C:\Program Files (x86)\CMake 2.
   # Run `nmake`, this should build the project
   # Run `gui\wmiviewer.exe`, the application should launch !
   
-
