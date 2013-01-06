@@ -86,13 +86,15 @@ ClassBrowser::ClassBrowser(const WmiLocator& l, QWidget* p) :
 	
 	connect(
 		_listModel, SIGNAL(modelReset()),
-		this, SLOT(loadMoreClasses()));
-	connect(
-		_listModel, SIGNAL(modelReset()),
 		_classModel, SLOT(clear()));
+	
 	connect(
-		_listModel, SIGNAL(rowsInserted(const QModelIndex&,int,int)),
-		this, SLOT(loadMoreClasses()));
+		_listModel, SIGNAL(loadStatus(const QString&,int)),
+		this, SIGNAL(status(const QString&, int)));
+
+	connect(
+		_listModel, SIGNAL(columnsInserted(const QModelIndex&,int,int)),
+		this, SLOT(loadStarted()));
 	
 	connect(
 		_classFilterLineEdit, SIGNAL(textChanged(const QString&)),
@@ -120,15 +122,12 @@ void ClassBrowser::loadClasses()
 	if (!_listModel->execute())
 	{
 		QMessageBox::warning(this, tr("Load Classes"), tr("Invalid namespace"));
-		return;
 	}
-	_classListView->setModelColumn(1);
 }
 
-void ClassBrowser::loadMoreClasses()
+void ClassBrowser::loadStarted()
 {
-	while (_listModel->canFetchMore())
-		_listModel->fetchMore();
+	_classListView->setModelColumn(1);
 }
 
 void ClassBrowser::classSelected(const QItemSelection& selected,

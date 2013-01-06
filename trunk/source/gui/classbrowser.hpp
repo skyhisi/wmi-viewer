@@ -19,10 +19,11 @@ class ClassBrowser : public QWidget
 	signals:
 		void query(const QString& ns, const QString& query);
 		void switchTo();
+		void status(const QString& message, int timeout);
 		
 	private slots:
 		void loadClasses();
-		void loadMoreClasses();
+		void loadStarted();
 		void classSelected(const QItemSelection& selected,
 			const QItemSelection& deselected);
 		void classLoaded();

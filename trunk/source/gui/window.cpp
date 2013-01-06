@@ -6,6 +6,9 @@
 Window::Window(const WmiLocator& locator, QWidget* p) :
 	QMainWindow(p)
 {
+	setWindowTitle(qApp->applicationName());
+	resize(700, 500);
+
 	QueryViewer* viewer = new QueryViewer(locator, this);
 
 	ClassBrowser* classBrowser = new ClassBrowser(locator, this);
@@ -21,6 +24,8 @@ Window::Window(const WmiLocator& locator, QWidget* p) :
 		classBrowser, SIGNAL(query(const QString&, const QString&)),
 		viewer, SLOT(loadQuery(const QString&, const QString&)));
 	
+	// Connect up a signal mapper so that when a tab page widget emits
+	// 'switchTo', the tab widget will switch to that tab
 	QSignalMapper* switchTabMapper = new QSignalMapper(this);
 	connect(switchTabMapper, SIGNAL(mapped(QWidget*)), tabs, SLOT(setCurrentWidget(QWidget*)));
 	for (int i = 0; i < tabs->count(); ++i)
@@ -28,10 +33,11 @@ Window::Window(const WmiLocator& locator, QWidget* p) :
 		QWidget* w = tabs->widget(i);
 		switchTabMapper->setMapping(w, w);
 		connect(w, SIGNAL(switchTo()), switchTabMapper, SLOT(map()));
+		connect(w, SIGNAL(status(const QString&,int)), statusBar(), SLOT(showMessage(const QString&,int)));
+		
 	}
 	
-	
-	resize(700, 500);
+	statusBar()->showMessage(tr("Ready"), 1000);
 }
 
 Window::~Window()

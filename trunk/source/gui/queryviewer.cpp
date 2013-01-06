@@ -31,8 +31,9 @@ QueryViewer::QueryViewer(const WmiLocator& locator, QWidget* p):
 	QPushButton* execBtn = buttons->addButton(tr("Execute"), QDialogButtonBox::AcceptRole);
 	connect(execBtn, SIGNAL(clicked(bool)), this, SLOT(execute()));
 	
-	QPushButton* fetchBtn = buttons->addButton(tr("Load All"), QDialogButtonBox::ActionRole);
-	connect(fetchBtn, SIGNAL(clicked(bool)), this, SLOT(fetchAll()));
+	QPushButton* cancelBtn = buttons->addButton(tr("Cancel"), QDialogButtonBox::ActionRole);
+	cancelBtn->setDisabled(true);
+	connect(cancelBtn, SIGNAL(clicked(bool)), _model, SLOT(cancel()));
 	
 	
 	
@@ -60,6 +61,18 @@ QueryViewer::QueryViewer(const WmiLocator& locator, QWidget* p):
 	_nameSource->addItem(tr("Propagated"), WmiClassObject::NameSourcePropagated);
 	_nameSource->addItem(tr("System"), WmiClassObject::NameSourceSystem);
 	_nameSource->addItem(tr("Non-System"), WmiClassObject::NameSourceNonSystem);
+	
+	
+	connect(
+		_model, SIGNAL(loadStatus(const QString&,int)),
+		this, SIGNAL(status(const QString&, int)));
+	
+	connect(
+		_model, SIGNAL(loadingChanged(bool)),
+		execBtn, SLOT(setDisabled(bool)));
+	connect(
+		_model, SIGNAL(loadingChanged(bool)),
+		cancelBtn, SLOT(setEnabled(bool)));
 	
 }
 
@@ -89,10 +102,10 @@ void QueryViewer::execute()
 	}
 }
 
-void QueryViewer::fetchAll()
-{
-	while (_model->canFetchMore())
-	{
-		_model->fetchMore();
-	}
-}
+// void QueryViewer::fetchAll()
+// {
+	// while (_model->canFetchMore())
+	// {
+		// _model->fetchMore();
+	// }
+// }
