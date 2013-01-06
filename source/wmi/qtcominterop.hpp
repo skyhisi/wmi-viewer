@@ -45,6 +45,7 @@ class SafeArrayScoped
 };
 
 QVariant fromComVariant(const VARIANT& v);
+bool toComVariant(const QVariant& in, VARIANT& out);
 
 const char* HResultToName(HRESULT hr);
 

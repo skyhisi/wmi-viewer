@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 qt4_wrap_cpp(MOC_FILES
 	classbrowser.hpp
 	classmodel.hpp
+	objectenummodel.hpp
 	querymodel.hpp
 	queryviewer.hpp
 	window.hpp
@@ -20,6 +21,8 @@ add_executable(wmiviewer ${EXETYPE}
 	classbrowser.cpp
 	classmodel.hpp
 	classmodel.cpp
+	objectenummodel.hpp
+	objectenummodel.cpp
 	querymodel.hpp
 	querymodel.cpp
 	queryviewer.hpp

@@ -1,6 +1,7 @@
 #include "qtcominterop.hpp"
 
 #include <new>
+#include "wmibase.hpp"
 
 BStrScoped::BStrScoped(const QString& str) :
 	bs(SysAllocString(reinterpret_cast<const OLECHAR*>(str.utf16())))
@@ -127,7 +128,7 @@ QVariant fromComVariant(const VARIANT& v)
 {
 	switch (v.vt)
 	{
-		case VT_EMPTY: case VT_UNKNOWN: return QVariant();
+		case VT_EMPTY: return QVariant();
 		case VT_NULL: return QVariant(QMetaType::VoidStar, (void*)0);
 		case VT_I1: return QVariant::fromValue(v.cVal);
 		case VT_UI1: return QVariant::fromValue(v.bVal);
@@ -141,6 +142,7 @@ QVariant fromComVariant(const VARIANT& v)
 		case VT_UI8: return QVariant::fromValue(v.ullVal);
 		case VT_R4: return QVariant::fromValue(v.fltVal);
 		case VT_BOOL: return QVariant(bool(v.boolVal == -1));
+		case VT_UNKNOWN: return QVariant::fromValue(ComUnknown(*v.ppunkVal, false));
 		case VT_ERROR: return QVariant::fromValue(v.scode);
 		case VT_CY: return QVariant::fromValue(v.cyVal.int64);
 		case VT_DATE: return QVariant(QDate(30,12,1899).addDays(v.date));
@@ -149,8 +151,47 @@ QVariant fromComVariant(const VARIANT& v)
 		case VT_BSTR | VT_ARRAY: return QVariant(SafeArrayScoped(v.parray, false).toStringList());
 		case VT_I4 | VT_ARRAY: return QVariant(SafeArrayScoped(v.parray, false).toList());
 	}
-	qWarning() << "UNKNOWN VARIANT TYPE" << v.vt;
+	qWarning() << "UNKNOWN COM VARIANT TYPE" << v.vt;
 	return QVariant();
+}
+
+bool toComVariant(const QVariant& in, VARIANT& out)
+{
+	VariantInit(&out);
+	if (!in.isValid())
+		return false;
+		
+	HRESULT hr;
+		
+	if (in.isNull())
+	{
+		hr = VariantChangeType(&out, &out, 0, VT_NULL);
+		if (hr != S_OK)
+		{
+			qWarning() << "toComVariant: Error setting NULL";
+			return false;
+		}
+		return true;
+	}
+	
+#define SETV(QTTYPE, COMTYPE, ATTR, VALUE) case QTTYPE: out.ATTR = (VALUE); hr = VariantChangeType(&out, &out, 0, COMTYPE); break
+	switch (in.userType())
+	{
+		SETV(QMetaType::Bool, VT_BOOL, boolVal, (in.toBool() ? -1 : 0));
+		SETV(QMetaType::Int, VT_I4, lVal, in.value<int>());
+		SETV(QMetaType::QString, VT_BSTR, bstrVal, SysAllocString(reinterpret_cast<const OLECHAR*>(in.toString().utf16())));
+		
+		default:
+			qWarning() << "UNKNOWN QT VARIANT TYPE" << in.typeName() << in.userType();
+			return false;
+	}
+#undef SETV
+	if (hr != S_OK)
+	{
+		qWarning() << "toComVariant: Error setting type";
+		return false;
+	}
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
