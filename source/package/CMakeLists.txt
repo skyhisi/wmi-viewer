@@ -61,11 +61,11 @@ add_custom_command(
 )
 
 add_custom_command(
-	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer.exe"
+	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer-${PROJ_VERSION}.exe"
 	COMMAND "${WIX_LIGHT_EXE}" -nologo
 		-ext WixBalExtension
 		-ext WixUtilExtension
-		-out "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer.exe"
+		-out "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer-${PROJ_VERSION}.exe"
 		"${CMAKE_CURRENT_BINARY_DIR}/bootstrapper.wixobj"
 	MAIN_DEPENDENCY "${CMAKE_CURRENT_BINARY_DIR}/bootstrapper.wixobj"
 	DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer.msi"
@@ -73,5 +73,5 @@ add_custom_command(
 )
 
 add_custom_target(package ALL
-	DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer.exe")
+	DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/wmiviewer-${PROJ_VERSION}.exe")
 
