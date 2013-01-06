@@ -6,10 +6,13 @@ include(${QT_USE_FILE})
 
 find_library(WBEMUUID_LIBRARY wbemuuid)
 
-set(PROJ_VERSION 0.0.6)
+set(PROJ_VERSION 0.0.7)
 string(REPLACE "." "," PROJ_VERSION_COMMA "${PROJ_VERSION}")
 
-add_definitions(-D_WIN32_DCOM)
+add_definitions(-D_WIN32_DCOM -DPROJ_VERSION="${PROJ_VERSION}")
+set(QT_VERSION "${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+set(DIAG_STR "Build:${CMAKE_BUILD_TYPE};Windows:${CMAKE_SYSTEM_VERSION};MSVC:${MSVC_VERSION};Qt:${QT_VERSION};CMake:${CMAKE_VERSION}")
+#message(STATUS "DIAG_STR: ${DIAG_STR}")
 
 add_subdirectory(wmi)
 add_subdirectory(gui)

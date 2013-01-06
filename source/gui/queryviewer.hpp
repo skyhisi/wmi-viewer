@@ -16,10 +16,11 @@ class QueryViewer : public QWidget
 		
 	signals:
 		void switchTo();
+		void status(const QString& message, int timeout);
 		
 	private slots:
 		void execute();
-		void fetchAll();
+		// void fetchAll();
 	
 	private:
 		QueryModel* _model;

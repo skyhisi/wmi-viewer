@@ -29,6 +29,8 @@ class QueryModel : public QAbstractTableModel
 		
 		bool execute();
 		
+		bool isLoading() const;
+		
 		virtual bool canFetchMore(const QModelIndex& parent = QModelIndex()) const;
 		virtual void fetchMore(const QModelIndex& parent = QModelIndex());
 		
@@ -38,8 +40,19 @@ class QueryModel : public QAbstractTableModel
 		virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 		virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 		
+	public slots:
+		void cancel();
+		
+	signals:
+		void loadingChanged(bool loading);
+		void loadStatus(const QString& message, int timeout);
+		
+	private slots:
+		void loadMore();
 		
 	private:
+		void setLoading(bool loading);
+	
 		const WmiLocator& _locator;
 		WmiService _service;
 		WmiClassObjectEnum _enum;
@@ -50,6 +63,8 @@ class QueryModel : public QAbstractTableModel
 		QStringList _columnNames;
 		QList<WmiClassObject> _objects;
 		bool _more;
+		bool _loading;
+		QTimer* _semiSyncTimer;
 		
 		Q_DISABLE_COPY(QueryModel)
 };
