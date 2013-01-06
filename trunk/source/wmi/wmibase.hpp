@@ -47,6 +47,17 @@ class ComPointer
 		T* value;
 };
 
+class ComUnknown : public ComPointer<IUnknown>
+{
+	public:
+		ComUnknown() : ComPointer<IUnknown>(0, true) {}
+		ComUnknown(IUnknown* v, bool take) : ComPointer<IUnknown>(v, take) {}
+		// ComUnknown(const ComUnknown& other) : ComPointer<IUnknown>(other) {}
+		// ComUnknown& operator=(const ComUnknown& other) { ComPointer<IUnknown>::operator=(other); return *this; }
+};
+
+Q_DECLARE_METATYPE(ComUnknown)
+
 
 template <class T>
 class WmiCloneable : public virtual ComPointer<T>

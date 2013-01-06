@@ -1,15 +1,9 @@
 #ifndef _WMIVIEWER_QUERYMODEL_HPP_
 #define _WMIVIEWER_QUERYMODEL_HPP_
 
-#include <QtCore>
+#include "objectenummodel.hpp"
 
-#include "../wmi/wmilocator.hpp"
-#include "../wmi/wmiservice.hpp"
-#include "../wmi/wmiclassobjectenum.hpp"
-#include "../wmi/wmiclassobject.hpp"
-
-
-class QueryModel : public QAbstractTableModel
+class QueryModel : public ObjectEnumModel
 {
 	Q_OBJECT
 	public:
@@ -19,62 +13,15 @@ class QueryModel : public QAbstractTableModel
 		QString query() const;
 		void setQuery(const QString& query);
 		
-		QString serviceNamespace() const;
-		void setServiceNamespace(const QString& serviceNamespace);
-		
-		WmiClassObject::NameSource nameSource() const;
-		void setNameSource(WmiClassObject::NameSource nameSource);
-		
 		bool isNotification() const;
 		void setNotification(bool notify);
 		
-		bool execute(QString* errorMsg = 0);
-		
-		bool isLoading() const;
-		
-		virtual bool canFetchMore(const QModelIndex& parent = QModelIndex()) const;
-		virtual void fetchMore(const QModelIndex& parent = QModelIndex());
-		
-		virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-		virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-		virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-		virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-		virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-		
-	public slots:
-		void cancel();
-		
-	signals:
-		void loadingChanged(bool loading);
-		void loadStatus(const QString& message, int timeout);
-		
-	private slots:
-		void loadMore();
-		
-	private:
-		void setLoading(bool loading);
-	
-		const WmiLocator& _locator;
-		WmiService _service;
-		WmiClassObjectEnum _enum;
+	protected:
+		virtual WmiClassObjectEnum doExecute(WmiService service, QString* errorMsg);
+
+	private:	
 		QString _query;
-		QString _serviceNamespace;
-		WmiClassObject::NameSource _nameSource;
-		
-		//QStringList _columnNames;
-		struct ColInfo
-		{
-			QString name;
-			QString type;
-			bool canWrite;
-		};
-		QList<ColInfo> _columnInfo;
-		QList<WmiClassObject> _objects;
-		
-		bool _more;
-		bool _loading;
 		bool _notification;
-		QTimer* _semiSyncTimer;
 		
 		Q_DISABLE_COPY(QueryModel)
 };

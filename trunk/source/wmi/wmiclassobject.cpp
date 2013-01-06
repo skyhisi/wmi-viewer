@@ -40,17 +40,37 @@ QVariant WmiClassObject::getProperty(const QString& name) const
 	if (!valid())
 		return QVariant();
 	VARIANT v;
-	BStrScoped bsname(name);
-	HRESULT hr = get()->Get(bsname, 0, &v, 0, 0);
+	const BStrScoped bsname(name);
+	const HRESULT hr = get()->Get(bsname, 0, &v, 0, 0);
 	if (FAILED(hr))
 	{
 		qWarningFromHresult(hr, "Can not get property");
 		return QVariant();
 	}
 	
-	QVariant ret(fromComVariant(v));
+	const QVariant ret(fromComVariant(v));
 	VariantClear(&v);
 	return ret;
+}
+
+bool WmiClassObject::setProperty(const QString& name, const QVariant& variant)
+{
+	if (!valid())
+		return false;
+	
+	VARIANT v;
+	if (!toComVariant(variant, v))
+		return false;
+	
+	BStrScoped bsname(name);
+	const HRESULT hr = get()->Put(bsname, 0, &v, 0);
+	VariantClear(&v);
+	if (FAILED(hr))
+	{
+		qWarningFromHresult(hr, "Can not set property");
+		return false;
+	}
+	return true;
 }
 
 WmiQualifierSet WmiClassObject::classQualifierSet() const

@@ -21,6 +21,8 @@ class EXPORT WmiClassObject : public WmiCloneable<IWbemClassObject>, public WmiC
 		QStringList propertyNames(NameSource source = NameSourceAll) const;
 		
 		QVariant getProperty(const QString& name) const;
+		bool setProperty(const QString& name, const QVariant& variant);
+		
 		
 		WmiQualifierSet classQualifierSet() const;
 		WmiQualifierSet propertyQualifierSet(const QString& propName) const;
