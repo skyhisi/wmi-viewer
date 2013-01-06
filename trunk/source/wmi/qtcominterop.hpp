@@ -46,6 +46,8 @@ class SafeArrayScoped
 
 QVariant fromComVariant(const VARIANT& v);
 
+const char* HResultToName(HRESULT hr);
+
 void qWarningFromHresult(HRESULT hr, const char* msg);
 
 #endif

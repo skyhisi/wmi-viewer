@@ -28,9 +28,7 @@ class QueryModel : public QAbstractTableModel
 		bool isNotification() const;
 		void setNotification(bool notify);
 		
-		QString lastError() const;
-		
-		bool execute();
+		bool execute(QString* errorMsg = 0);
 		
 		bool isLoading() const;
 		
@@ -62,9 +60,17 @@ class QueryModel : public QAbstractTableModel
 		QString _query;
 		QString _serviceNamespace;
 		WmiClassObject::NameSource _nameSource;
-		QString _errorMsg;
-		QStringList _columnNames;
+		
+		//QStringList _columnNames;
+		struct ColInfo
+		{
+			QString name;
+			QString type;
+			bool canWrite;
+		};
+		QList<ColInfo> _columnInfo;
 		QList<WmiClassObject> _objects;
+		
 		bool _more;
 		bool _loading;
 		bool _notification;
