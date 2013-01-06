@@ -1,0 +1,27 @@
+#include <windows.h>
+
+1 VERSIONINFO
+FILEVERSION     ${PROJ_VERSION_COMMA},0
+PRODUCTVERSION  ${PROJ_VERSION_COMMA},0
+FILEOS          VOS_NT
+FILETYPE        VFT_DLL
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904E4"
+		BEGIN
+			VALUE "CompanyName",      "Silas Parker\0"
+			VALUE "FileDescription",  "WMI Wrapper\0"
+			VALUE "FileVersion",      "${PROJ_VERSION}\0"
+			VALUE "InternalName",     "qtwmiwrapper\0"
+			VALUE "OriginalFilename", "qtwmiwrapper.dll\0"
+			VALUE "ProductName",      "WMI Viewer\0"
+			VALUE "ProductVersion",   "${PROJ_VERSION}\0"
+			VALUE "LegalCopyright",   "Silas Parker\0"
+		END
+	END
+	BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0809, 1200
+    END
+END

@@ -168,7 +168,7 @@ void ClassBrowser::buildQuery()
 	QStringList params;
 	foreach(QModelIndex idx, _propertyTableView->selectionModel()->selectedRows())
 	{
-		params << idx.data().toString();
+		params << _classModel->headerData(idx.row(), Qt::Vertical).toString();
 	}
 	const QString paramStr = params.isEmpty() ? QString("*") : params.join(", ");
 

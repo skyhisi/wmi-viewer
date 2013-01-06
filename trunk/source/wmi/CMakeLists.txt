@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+configure_file(qtwmiwrapper.rc qtwmiwrapper.rc)
+
 add_library(qtwmiwrapper SHARED
 	comscope.hpp
 	comscope.cpp
@@ -16,9 +18,11 @@ add_library(qtwmiwrapper SHARED
 	wmilocator.cpp
 	wmiservice.hpp
 	wmiservice.cpp
+	"${CMAKE_CURRENT_BINARY_DIR}/qtwmiwrapper.rc"
 )
 
 target_link_libraries(qtwmiwrapper
 	${QT_LIBRARIES}
 	${WBEMUUID_LIBRARY}
 )
+
