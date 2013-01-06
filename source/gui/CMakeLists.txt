@@ -13,6 +13,8 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(EXETYPE WIN32)
 endif()
 
+configure_file(wmiviewer.rc wmiviewer.rc)
+
 add_executable(wmiviewer ${EXETYPE}
 	classbrowser.hpp
 	classbrowser.cpp
@@ -27,6 +29,7 @@ add_executable(wmiviewer ${EXETYPE}
 	wmiviewer.cpp
 	wqlhighlighter.hpp
 	wqlhighlighter.cpp
+	"${CMAKE_CURRENT_BINARY_DIR}/wmiviewer.rc"
 	${MOC_FILES}
 )
 

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<?define ProductName="WMI Viewer"?>
+<?define Manufacturer="Silas Parker"?>
+<?define Description="WMI GUI"?>
+<?define upgradeCode="da55de18-d786-4bc6-bd94-72735b5ec9ca"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	<Bundle
+		Name="$(var.ProductName)"
+		Version="$(var.thisVersion)"
+		Manufacturer="$(var.Manufacturer)"
+		UpgradeCode="$(var.upgradeCode)"
+		AboutUrl="https://code.google.com/p/wmi-viewer/"
+		HelpUrl="https://code.google.com/p/wmi-viewer/"
+		Copyright="Copyright 2013 Silas Parker"
+		Condition="((VersionNT >= v5.1) AND (ServicePackLevel >= 3)) OR ((VersionNT >= v5.2) AND (ServicePackLevel >= 2)) OR (VersionNT >= v6.0)"
+	>
+	<WixVariable Id="WixStdbaLicenseRtf" Value="$(var.SRCDIR)\package\gpl3.rtf" /> 
+	<BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense"/>
+	<Variable Name="InstallFolder" Type="string" Value="[ProgramFilesFolder]$(var.ProductName)" />
+	
+	<util:ProductSearch Guid="F0C3E5D1-1ADE-321E-8167-68EF0DE699A5" Variable="vcredist_x86_installed" Result="state" />
+	
+	<Chain>
+		<ExePackage 
+			SourceFile="$(var.BINDIR)\package\vcredist_x86.exe"
+			DetectCondition="(vcredist_x86_installed > 2)"
+			DownloadUrl="$(var.REDISTURL)"
+			InstallCommand="/q"
+			Vital="yes"
+			Compressed="no"
+			PerMachine="yes"
+			Permanent="yes"
+		/>
+		<MsiPackage
+			Id="wmiviewer"
+			Compressed="yes"
+			SourceFile="$(var.BINDIR)\package\wmiviewer.msi"
+			Vital="yes"
+		>
+			<MsiProperty Name="APPLICATIONROOTDIRECTORY" Value="[InstallFolder]" />
+		</MsiPackage> 
+	</Chain>
+  </Bundle>
+</Wix>

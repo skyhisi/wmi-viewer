@@ -2,14 +2,12 @@
 <?define ProductName="WMI Viewer"?>
 <?define Manufacturer="Silas Parker"?>
 <?define Description="WMI GUI"?>
-<?define firstVersion="0.0.0"?>
-<?define thisVersion="0.0.2"?>
 <?define upgradeCode="ca6ef6d7-0881-481c-ad53-6017c6e3f5c2"?>
 
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.thisVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.upgradeCode)">
-		<Package Description="$(var.Description)" Manufacturer="$(var.Manufacturer)" InstallerVersion="301" Compressed="yes"/>
+		<Package Description="$(var.Description)" Manufacturer="$(var.Manufacturer)" InstallerVersion="301" Compressed="yes" InstallScope="perMachine"/>
 		<Media Id="1" Cabinet="wmiviewer.cab" EmbedCab="yes"/>
 
 		<MajorUpgrade
@@ -23,14 +21,13 @@
 				<Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)"/>
 			</Directory>
 		</Directory>
-
+<!--
 		<Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
 		<UIRef Id="WixUI_InstallDir" />
 
-
 		<Property Id="ARPHELPLINK" Value="https://code.google.com/p/wmi-viewer/"/>
 		<WixVariable Id="WixUILicenseRtf" Value="$(var.SRCDIR)\package\gpl3.rtf" />
-
+-->
 		<DirectoryRef Id="APPLICATIONROOTDIRECTORY">
 			<Component Id="wmiviewer.exe" Guid="*"><File Source="$(var.BINDIR)\gui\wmiviewer.exe" KeyPath="yes" Checksum="yes"/></Component>
 			<Component Id="qtwmiwrapper.dll" Guid="*"><File Source="$(var.BINDIR)\wmi\qtwmiwrapper.dll" KeyPath="yes" Checksum="yes"/></Component>

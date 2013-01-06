@@ -6,6 +6,9 @@ include(${QT_USE_FILE})
 
 find_library(WBEMUUID_LIBRARY wbemuuid)
 
+set(PROJ_VERSION 0.0.5)
+string(REPLACE "." "," PROJ_VERSION_COMMA "${PROJ_VERSION}")
+
 add_definitions(-D_WIN32_DCOM)
 
 add_subdirectory(wmi)
