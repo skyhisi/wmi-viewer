@@ -49,6 +49,8 @@ QueryViewer::QueryViewer(const WmiLocator& locator, QWidget* p):
 	
 	_view->setModel(_model);
 	_view->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+	_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+	_view->setSelectionMode(QAbstractItemView::NoSelection);
 	
 	_nsEdit->setText(_model->serviceNamespace());
 	_editor->setPlainText(_model->query());
@@ -100,8 +102,9 @@ void QueryViewer::execute()
 	_model->setQuery(_editor->toPlainText().trimmed());
 	_model->setNameSource((WmiClassObject::NameSource)(_nameSource->itemData(_nameSource->currentIndex())).toInt());
 	_model->setNotification(_notifyCheckBox->isChecked());
-	if (!_model->execute())
+	QString err;
+	if (!_model->execute(&err))
 	{
-		QMessageBox::warning(this, tr("Query Error"), _model->lastError());
+		QMessageBox::warning(this, tr("Query Error"), err);
 	}
 }
