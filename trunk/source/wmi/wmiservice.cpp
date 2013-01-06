@@ -28,7 +28,7 @@ WmiClassObject WmiService::getObject(const QString& objectPath) const
 	return WmiClassObject(obj);
 }
 
-WmiClassObjectEnum WmiService::execQuery(const QString& query) const
+WmiClassObjectEnum WmiService::execQuery(const QString& query, bool notification) const
 {
 	if (!valid())
 	{
@@ -38,12 +38,21 @@ WmiClassObjectEnum WmiService::execQuery(const QString& query) const
 	
 	IEnumWbemClassObject* enumer = 0;
 	BStrScoped bsq(query);
-	HRESULT hr = get()->ExecQuery(
-		BSTR(L"WQL"),
-		bsq,
-		WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
-		0,
-		&enumer);
+	HRESULT hr;
+	if (notification)
+	{
+		hr = get()->ExecNotificationQuery(
+			BSTR(L"WQL"), bsq,
+			WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+			0, &enumer);
+	}
+	else
+	{
+		hr = get()->ExecQuery(
+			BSTR(L"WQL"), bsq,
+			WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+			0, &enumer);
+	}
 	if (FAILED(hr))
 	{
 		qWarningFromHresult(hr, "Query execution failed");
@@ -51,4 +60,3 @@ WmiClassObjectEnum WmiService::execQuery(const QString& query) const
 	}
 	return WmiClassObjectEnum(enumer);
 }
-

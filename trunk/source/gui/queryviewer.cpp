@@ -8,7 +8,8 @@ QueryViewer::QueryViewer(const WmiLocator& locator, QWidget* p):
 	_view(new QTableView()),
 	_nsEdit(new QLineEdit()),
 	_editor(new QTextEdit()),
-	_nameSource(new QComboBox())
+	_nameSource(new QComboBox()),
+	_notifyCheckBox(new QCheckBox(tr("Notification Query")))
 {
 	QGroupBox* queryGroupBox = new QGroupBox();
 	QVBoxLayout* queryGroupBoxLayout = new QVBoxLayout();
@@ -24,6 +25,9 @@ QueryViewer::QueryViewer(const WmiLocator& locator, QWidget* p):
 	nameSourceLayout->addWidget(_nameSource);
 	nameSourceLayout->addStretch();
 	queryGroupBoxLayout->addLayout(nameSourceLayout);
+	
+	queryGroupBoxLayout->addWidget(_notifyCheckBox);
+	
 	
 	QDialogButtonBox* buttons = new QDialogButtonBox();
 	queryGroupBoxLayout->addWidget(buttons);
@@ -95,17 +99,9 @@ void QueryViewer::execute()
 	_model->setServiceNamespace(_nsEdit->text().trimmed());
 	_model->setQuery(_editor->toPlainText().trimmed());
 	_model->setNameSource((WmiClassObject::NameSource)(_nameSource->itemData(_nameSource->currentIndex())).toInt());
-	
+	_model->setNotification(_notifyCheckBox->isChecked());
 	if (!_model->execute())
 	{
 		QMessageBox::warning(this, tr("Query Error"), _model->lastError());
 	}
 }
-
-// void QueryViewer::fetchAll()
-// {
-	// while (_model->canFetchMore())
-	// {
-		// _model->fetchMore();
-	// }
-// }

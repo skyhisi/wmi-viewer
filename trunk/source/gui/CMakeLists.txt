@@ -38,8 +38,3 @@ target_link_libraries(wmiviewer
 	${QT_LIBRARIES}
 	${WBEMUUID_LIBRARY}
 )
-
-# Copy DLL into build dir to allow running from command line without setting PATH
-add_custom_command(TARGET wmiviewer POST_BUILD
-	COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qtwmiwrapper>" "${CMAKE_CURRENT_BINARY_DIR}"
-)

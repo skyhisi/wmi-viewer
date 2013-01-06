@@ -26,3 +26,7 @@ target_link_libraries(qtwmiwrapper
 	${WBEMUUID_LIBRARY}
 )
 
+# Copy DLL into gui dir to allow running from command line without setting PATH
+add_custom_command(TARGET qtwmiwrapper POST_BUILD
+	COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qtwmiwrapper>" "${CMAKE_BINARY_DIR}/gui"
+)
