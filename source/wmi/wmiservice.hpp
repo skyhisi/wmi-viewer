@@ -15,7 +15,8 @@ class EXPORT WmiService : public ComPointer<IWbemServices>
 		
 		WmiClassObject getObject(const QString& objectPath) const;
 		
-		WmiClassObjectEnum execQuery(const QString& query) const;
+		WmiClassObjectEnum execQuery(const QString& query, bool notification = false) const;
+		
 };
 
 #endif

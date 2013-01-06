@@ -127,7 +127,7 @@ QVariant fromComVariant(const VARIANT& v)
 {
 	switch (v.vt)
 	{
-		case VT_EMPTY: return QVariant();
+		case VT_EMPTY: case VT_UNKNOWN: return QVariant();
 		case VT_NULL: return QVariant(QMetaType::VoidStar, (void*)0);
 		case VT_I1: return QVariant::fromValue(v.cVal);
 		case VT_UI1: return QVariant::fromValue(v.bVal);

@@ -25,6 +25,9 @@ class QueryModel : public QAbstractTableModel
 		WmiClassObject::NameSource nameSource() const;
 		void setNameSource(WmiClassObject::NameSource nameSource);
 		
+		bool isNotification() const;
+		void setNotification(bool notify);
+		
 		QString lastError() const;
 		
 		bool execute();
@@ -64,6 +67,7 @@ class QueryModel : public QAbstractTableModel
 		QList<WmiClassObject> _objects;
 		bool _more;
 		bool _loading;
+		bool _notification;
 		QTimer* _semiSyncTimer;
 		
 		Q_DISABLE_COPY(QueryModel)

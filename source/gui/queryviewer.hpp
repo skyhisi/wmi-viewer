@@ -28,6 +28,7 @@ class QueryViewer : public QWidget
 		QLineEdit* _nsEdit;
 		QTextEdit* _editor;
 		QComboBox* _nameSource;
+		QCheckBox* _notifyCheckBox;
 		Q_DISABLE_COPY(QueryViewer)
 };
 

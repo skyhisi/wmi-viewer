@@ -16,6 +16,7 @@ QueryModel::QueryModel(const WmiLocator& l, QObject* p) :
 	_objects(),
 	_more(false),
 	_loading(false),
+	_notification(false),
 	_semiSyncTimer(new QTimer(this))
 {
 	_semiSyncTimer->setSingleShot(true);
@@ -33,6 +34,9 @@ void QueryModel::setServiceNamespace(const QString& s) { _serviceNamespace = s; 
 
 WmiClassObject::NameSource QueryModel::nameSource() const { return _nameSource; }
 void QueryModel::setNameSource(WmiClassObject::NameSource n) { _nameSource = n; }
+
+bool QueryModel::isNotification() const { return _notification; }
+void QueryModel::setNotification(bool n) { _notification = n; }
 
 QString QueryModel::lastError() const { return _errorMsg; }
 
@@ -56,7 +60,7 @@ bool QueryModel::execute()
 		return false;
 	}
 	
-	_enum = _service.execQuery(_query);
+	_enum = _service.execQuery(_query, _notification);
 	if (!_enum.valid())
 	{
 		_errorMsg = "Can not execute query";
@@ -109,7 +113,7 @@ void QueryModel::loadMore()
 		else
 		{
 			_semiSyncTimer->start(0); // Callback once event loop clear
-			emit loadStatus(tr("Loaded %n rows ...", 0, rowCount() + tempList.count() - 1), 0);
+			emit loadStatus(tr("Loaded %n rows ...", 0, rowCount() + tempList.count()), 0);
 		}
 	}
 	else
